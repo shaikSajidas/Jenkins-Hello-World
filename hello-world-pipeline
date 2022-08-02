@@ -1,0 +1,28 @@
+pipeline {
+     agent any
+     stages {
+         stage ('cloning the repo') {
+             steps {
+                 git changelog: false, poll: false, url: 'https://github.com/shaikSajidas/Jenkins-Hello-World.git'
+             }
+         }
+     stage ('building the docker image') {
+             steps {
+                     sh "docker image build -t sajidan/helloworld:$BUILD_NUMBER ."                   
+                 }                
+     }
+     stage ('push into dockerhub') {             
+             steps {
+                withCredentials([usernamePassword(credentialsId: 'sajidan', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
+                    sh "docker login -u $docker_username -p $docker_password"
+                    sh "docker image push  sajidan/helloworld:$BUILD_NUMBER" 
+                    }
+                 }
+             }
+     }
+}
+
+
+
+
+
