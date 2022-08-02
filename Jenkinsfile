@@ -3,7 +3,7 @@ properties([pipelineTriggers([githubPush()])])
 pipeline {
     environment {
         // name of the image without tag
-        dockerRepo = "sajidan"
+        dockerRepo = "varungujarathi9/jenkins-hello-world"
         dockerCredentials = 'docker_hub'
         dockerImageVersioned = ""
         dockerImageLatest = ""
@@ -19,25 +19,30 @@ pipeline {
                  $class: 'GitSCM',
                  branches: [[name: 'master']],
                  userRemoteConfigs: [[
-                    url: 'https://github.com/shaikSajidas/Jenkins-Hello-World.git',
+                    url: 'https://www.github.com/varungujarathi9/Jenkins-Hello-World.git',
                     credentialsId: '',
                  ]]
                 ])
             }
         }
-    }
         stage("Building docker image"){
-            steps{                
-               sh "docker image build -t sajidan/helloworld:$BUILD_NUMBER ."
-                }            
+            steps{
+                script{
+                    dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
+                    dockerImageLatest = docker.build dockerRepo + ":latest"
+                }
+            }
         }
         stage("Pushing image to registry"){
             steps{
-                    
-                    withCredentials([usernamePassword(credentialsId: 'sajidan', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
-                    sh "docker login -u $docker_username -p $docker_password"
-                    sh "docker image push  sajidan/helloworld:latest"
+                script{
+                    // if you want to use custom registry, use the first argument, which is blank in this case
+                    docker.withRegistry( '', dockerCredentials){
+                        dockerImageVersioned.push()
+                        dockerImageLatest.push()
+                    }
                 }
+            }
         }
         stage('Cleaning up') {
             steps {
@@ -53,4 +58,5 @@ pipeline {
        }
    }
 }
+
 
