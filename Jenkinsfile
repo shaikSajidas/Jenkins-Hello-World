@@ -25,6 +25,7 @@ pipeline {
                 ])
             }
         }
+    }
         stage("Building docker image"){
             steps{
                 script{
