@@ -36,11 +36,10 @@ pipeline {
         stage("Pushing image to registry"){
             steps{
                 script{
-                    // if you want to use custom registry, use the first argument, which is blank in this case
-                    docker.withRegistry( '', dockerCredentials){
-                        dockerImageVersioned.push()
-                        dockerImageLatest.push()
-                    }
+                    
+                    withCredentials([usernamePassword(credentialsId: 'sajidan', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
+                    sh "docker login -u $docker_username -p $docker_password"
+                    sh "docker image push  sajidan/helloworld:latest"
                 }
             }
         }
