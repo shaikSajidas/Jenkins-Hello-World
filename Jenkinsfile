@@ -27,22 +27,17 @@ pipeline {
         }
     }
         stage("Building docker image"){
-            steps{
-                script{
-                    dockerImageVersioned = docker.build dockerRepo + ":$BUILD_NUMBER"
-                    dockerImageLatest = docker.build dockerRepo + ":latest"
-                }
-            }
+            steps{                
+               sh "docker image build -t sajidan/helloworld:$BUILD_NUMBER ."
+                }            
         }
         stage("Pushing image to registry"){
             steps{
-                script{
                     
                     withCredentials([usernamePassword(credentialsId: 'sajidan', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
                     sh "docker login -u $docker_username -p $docker_password"
                     sh "docker image push  sajidan/helloworld:latest"
                 }
-            }
         }
         stage('Cleaning up') {
             steps {
