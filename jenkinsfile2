@@ -19,6 +19,15 @@ pipeline {
                     sh "docker image push  sajidan/helloworld:$BUILD_NUMBER" 
                     }
                  }
-             }
+             }            
+     }
+
+     post {
+        success {
+            // send the success email
+            echo "Success"
+           mail bcc: '', body: 'Build success', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
+           subject: 'build successed', to: 'shaiksajida020@gmail.com'
+        }
      }
 }
