@@ -29,5 +29,11 @@ pipeline {
            mail bcc: '', body: 'Build success', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
            subject: 'build successed', to: 'shaiksajida020@gmail.com'
         }
+
+        unsuccessful {
+            //send the unsuccess email
+         mail bcc: '', body: 'Build failed', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
+         subject: 'build failed', to: 'shaiksajida020@gmail.com'
+        }
      }
 }
