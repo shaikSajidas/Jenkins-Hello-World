@@ -19,7 +19,15 @@ pipeline {
                     sh "docker image push  sajidan/helloworld:$BUILD_NUMBER" 
                     }
                  }
-             }            
+             }
+     stage('Build the Code and sonarqube-analysis') {
+            steps {
+                withSonarQubeEnv('SONAR_LATEST') {
+                  
+                }
+
+            }
+        }
      }
 
      post {
