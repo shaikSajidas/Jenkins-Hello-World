@@ -9,12 +9,11 @@ pipeline {
      stage ('building the docker image') {
              steps {
                      sh "docker image build -t sajidan/helloworld:$BUILD_NUMBER ."                   
-                 }                
+                   }                
      }
      stage ('push into dockerhub') {             
              steps {
                withCredentials([usernamePassword(credentialsId: '9aae2e42-a470-4e7d-8413-52f260dcd5e5', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
-               // withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'docker_password', usernameVariable: 'docker_username')]) {
                     sh "docker login -u $docker_username -p $docker_password"
                     sh "docker image push  sajidan/helloworld:$BUILD_NUMBER" 
                     }
@@ -27,14 +26,12 @@ pipeline {
                         mvn clean install
                         mvn sonar:sonar'''  
                 }
-
             }
         }
 
      post {
         success {
             // send the success email
-            echo "Success"
            mail bcc: '', body: 'Build success', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
            subject: 'build successed', to: 'shaiksajida020@gmail.com'
         }

@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld-deployment
+  labels:
+    app: helloworld
+spec:
+  minReadySeconds: 20
+  replicas: 2
+  selector:
+    matchLabels:
+      app: helloworld
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - name: helloworld
+        image: sajidan/helloworld:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name:  dockerpull
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: helloworldservice
+spec:
+  selector:
+    app:  helloworld
+  type:   NodePort
+  ports:
+  - name:  name-of-the-port
+    port:  80
+    targetPort:  8080
