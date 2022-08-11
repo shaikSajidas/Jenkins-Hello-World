@@ -19,6 +19,9 @@ pipeline {
                     }
                  }
              }
+
+
+
      stage('sonarqube-analysis') {
             steps {
                 withSonarQubeEnv('SONAR_LATEST') {
@@ -45,4 +48,8 @@ pipeline {
        //  subject: 'build failed', to: 'shaiksajida020@gmail.com'
        // }
     // }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 2463b1fa6995ec4d3a3402c50a83193d8e629cc3
