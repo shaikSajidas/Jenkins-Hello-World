@@ -20,7 +20,14 @@ pipeline {
                  }
              }
 
-
+     stage ('kubernets deploy') {
+            steps {
+                withCredentials([file(credentialsId: 'k8s_config', variable: 'credentialsId')]) {
+                   sh "kubectl apply -f pod.yml"
+                } 
+                
+            }
+        }
 
      stage('sonarqube-analysis') {
             steps {
@@ -33,23 +40,21 @@ pipeline {
             }
         }
      }
-
-     //post {
-       // success {
+             post {
+        success {
             // send the success email
             
-         //  mail bcc: '', body: 'Build success', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
-         //  subject: 'build successed', to: 'shaiksajida020@gmail.com'
-       // }
+           mail bcc: '', body: 'Build success', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
+           subject: 'build successed', to: 'shaiksajida020@gmail.com'
+        }
 
-       // unsuccessful {
+        unsuccessful {
             //send the unsuccess email
-        // mail bcc: '', body: 'Build failed', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
-       //  subject: 'build failed', to: 'shaiksajida020@gmail.com'
-       // }
-    // }
-<<<<<<< HEAD
+         mail bcc: '', body: 'Build failed', cc: '', from: 'shaiksajida020@gmail.com', replyTo: '',
+         subject: 'build failed', to: 'shaiksajida020@gmail.com'
+        }
+   
+     }
+
+
 }
-=======
-}
->>>>>>> 2463b1fa6995ec4d3a3402c50a83193d8e629cc3
